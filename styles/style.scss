@@ -1,0 +1,50 @@
+// === VARIABLES ===
+$pastel-red: #fb6962;
+$pastel-green: #79de79;
+$pastel-blue: #a8e4ef;
+$pastel-yellow: #fcfc99;
+// === / VARIABLES ===
+
+// === COMMONS ===
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+.wrapper {
+  width: 600px;
+  margin: 0 auto;
+}
+// === / COMMONS ===
+
+// === SLIDER ===
+.slider-container {
+  overflow: scroll;
+}
+.slider-track {
+  background: $pastel-yellow;
+  display: flex;
+  transition: 0.2s;
+}
+
+.slider-item {
+  min-width: 200px;
+  height: 100px;
+}
+
+.slider-item:nth-child(3n + 1) {
+  background-color: $pastel-red;
+}
+.slider-item:nth-child(3n + 2) {
+  background-color: $pastel-green;
+}
+.slider-item:nth-child(3n + 3) {
+  background-color: $pastel-blue;
+}
+
+.slider-buttons {
+  padding: 10px 20px;
+  text-align: center;
+}
+// === / SLIDER ===
