@@ -20,7 +20,7 @@ $pastel-yellow: #fcfc99;
 
 // === SLIDER ===
 .slider-container {
-  overflow: scroll;
+  overflow: hidden;
 }
 .slider-track {
   background: $pastel-yellow;
