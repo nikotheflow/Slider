@@ -11,7 +11,7 @@
 }
 
 .slider-container {
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .slider-track {
@@ -24,7 +24,7 @@
 }
 
 .slider-item {
-  min-width: 200px;
+  min-width: 600px;
   height: 100px;
 }
 

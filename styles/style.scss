@@ -20,8 +20,9 @@ $pastel-yellow: #fcfc99;
 
 // === SLIDER ===
 .slider-container {
-  overflow: hidden;
+  overflow-x: hidden;
 }
+
 .slider-track {
   background: $pastel-yellow;
   display: flex;
@@ -29,7 +30,7 @@ $pastel-yellow: #fcfc99;
 }
 
 .slider-item {
-  min-width: 200px;
+  min-width: 600px;
   height: 100px;
 }
 
