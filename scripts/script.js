@@ -17,7 +17,7 @@ let slidesHided = 0;
 let slidesLeft = sliderItemsCount - slidesToShow;
 let slideWidth = window.getComputedStyle(sliderItems[0]).width.match(/\d*/)[0];
 
-let touchStart = 'unclick';
+let positionStart = 'unclick';
 let delPosition = 0;
 
 // === / VARIABLES ===
@@ -50,38 +50,24 @@ btnPrev.addEventListener('click', () => {
 // === / BUTTONS ===
 
 
-// === TOUCH ===
+// === SWIPE ===
 
-sliderContainer.addEventListener('mousedown', () => {
-  touchStart = event.clientX;
-})
+sliderContainer.addEventListener('touchstart', touchStart);
+sliderContainer.addEventListener('touchmove', positionBySwipe);
+sliderContainer.addEventListener('touchend', touchEnd);
 
-sliderContainer.addEventListener('mousemove', () => {  
-  if (touchStart != 'unclick') {    
-    positionBySwipe(); 
-  }
-})
+sliderContainer.addEventListener('mousedown', touchStart);
+sliderContainer.addEventListener('mousemove', positionBySwipe);
+sliderContainer.addEventListener('mouseup', touchEnd);
 
-sliderContainer.addEventListener('mouseup', () => {  
-  touchStart = 'unclick';  
-  
-  position += delPosition;
-  
-  
-  correctPosition();
-  countSlides();  
-  moveSlides();  
-
-  delPosition = 0;
-})
-
-// === / TOUCH ===
+// === / SWIPE ===
 
 
 // === FUNCTIONS ===
 
 function moveSlides() {
   sliderTrack.style.transform = `translateX(${position}px)`;
+  delPosition = 0;
 }
 
 function countSlides() {
@@ -95,29 +81,25 @@ function countSlides() {
 }
 
 function positionBySwipe() {
-  touchCurrent = event.clientX;
-  delPosition = touchCurrent - touchStart;
+  if (positionStart != 'unclick') {    
+    positionCurrent = event.clientX;
+    delPosition = positionCurrent - positionStart;
 
-  sliderTrack.style.transform = `translateX(${(position + delPosition)}px)`;
+    sliderTrack.style.transform = `translateX(${(position + delPosition)}px)`;
+  }
+  
 }
 
 function correctPosition() {
-  console.log(position + delPosition, delPosition);
-
-  
+  positionStart = 'unclick';  
+  position += delPosition;  
 
   if (Math.abs(delPosition) < slideWidth / 2) {
-
     position = -slidesHided * slideWidth;
-
   } else if (delPosition < - slideWidth / 2) {
-
     position = (slidesHided + 1) * -slideWidth;  
-
   } else if (delPosition > slideWidth / 2) {
-
     position = (slidesHided - 1) * -slideWidth;    
-
   }
 
   if (position > 0) {
@@ -125,6 +107,16 @@ function correctPosition() {
   } else if (position < -(sliderItemsCount - 1) * slideWidth) {
     position = -(sliderItemsCount - 1) * slideWidth;
   }
+}
+
+function touchStart() {
+  positionStart = event.clientX;
+}
+
+function touchEnd() {
+  correctPosition();
+  countSlides();  
+  moveSlides();
 }
 
 // === / FUNCTIONS ===

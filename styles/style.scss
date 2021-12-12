@@ -13,8 +13,8 @@ $pastel-yellow: #fcfc99;
 }
 
 .wrapper {
-  width: 600px;
-  margin: 0 auto;
+  width: 60vw;
+  margin: 100px auto;
 }
 // === / COMMONS ===
 
@@ -30,8 +30,8 @@ $pastel-yellow: #fcfc99;
 }
 
 .slider-item {
-  min-width: 600px;
-  height: 100px;
+  min-width: 100%;
+  height: 400px;
 }
 
 .slider-item:nth-child(3n + 1) {
@@ -40,12 +40,21 @@ $pastel-yellow: #fcfc99;
 .slider-item:nth-child(3n + 2) {
   background-color: $pastel-green;
 }
+
 .slider-item:nth-child(3n + 3) {
   background-color: $pastel-blue;
 }
 
 .slider-buttons {
-  padding: 10px 20px;
+  padding: 10px 0;
   text-align: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  flex: 1 1 auto;
+  height: 30px;
+  border: none;
 }
 // === / SLIDER ===
