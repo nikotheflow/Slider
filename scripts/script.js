@@ -52,13 +52,13 @@ btnPrev.addEventListener('click', () => {
 
 // === SWIPE ===
 
-sliderContainer.addEventListener('touchstart', touchStart);
-sliderContainer.addEventListener('touchmove', positionBySwipe);
-sliderContainer.addEventListener('touchend', touchEnd);
+sliderContainer.addEventListener('touchstart', touchStartSwipe);
+sliderContainer.addEventListener('touchmove', touchMoveSwipe);
+sliderContainer.addEventListener('touchend', mouseUpSwipe);
 
-sliderContainer.addEventListener('mousedown', touchStart);
-sliderContainer.addEventListener('mousemove', positionBySwipe);
-sliderContainer.addEventListener('mouseup', touchEnd);
+sliderContainer.addEventListener('mousedown', mouseDownSwipe);
+sliderContainer.addEventListener('mousemove', mouseMoveSwipe);
+sliderContainer.addEventListener('mouseup', mouseUpSwipe);
 
 // === / SWIPE ===
 
@@ -80,7 +80,7 @@ function countSlides() {
   console.log('Слайдов осталось:', slidesLeft, 'Слайдов прошли:', slidesHided, 'Позиция:', position);
 }
 
-function positionBySwipe() {
+function mouseMoveSwipe() {
   if (positionStart != 'unclick') {    
     positionCurrent = event.clientX;
     delPosition = positionCurrent - positionStart;
@@ -109,14 +109,32 @@ function correctPosition() {
   }
 }
 
-function touchStart() {
+function mouseDownSwipe() {
+  console.log(event);
   positionStart = event.clientX;
 }
 
-function touchEnd() {
+function mouseUpSwipe() {
   correctPosition();
   countSlides();  
   moveSlides();
 }
 
+function touchStartSwipe() {
+  event.preventDefault();
+  positionStart = event.changedTouches[0].clientX;
+
+}
+
+function touchMoveSwipe() {
+  if (positionStart != 'unclick') {    
+    positionCurrent = event.changedTouches[0].clientX;
+    delPosition = positionCurrent - positionStart;
+
+    sliderTrack.style.transform = `translateX(${(position + delPosition)}px)`;
+  }
+}
+
 // === / FUNCTIONS ===
+
+
