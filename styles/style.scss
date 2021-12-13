@@ -13,7 +13,7 @@ $pastel-yellow: #fcfc99;
 }
 
 .wrapper {
-  width: 800px;
+  width: 340px;
   margin: 0 auto;
 }
 // === / COMMONS ===
@@ -24,25 +24,30 @@ $pastel-yellow: #fcfc99;
 }
 
 .slider-track {
-  background: $pastel-yellow;
   display: flex;
   transition: 0.2s;
 }
 
 .slider-item {
-  min-width: 100%;
+  min-width: 100px;
   height: 400px;
-}
+  border-radius: 10px;
 
-.slider-item:nth-child(3n + 1) {
-  background-color: $pastel-red;
-}
-.slider-item:nth-child(3n + 2) {
-  background-color: $pastel-green;
-}
+  &:not(:last-child) {
+    margin-right: 20px;
+  }
 
-.slider-item:nth-child(3n + 3) {
-  background-color: $pastel-blue;
+  &:nth-child(3n + 1) {
+    background-color: $pastel-red;
+  }
+
+  &:nth-child(3n + 2) {
+    background-color: $pastel-green;
+  }
+
+  &:nth-child(3n + 3) {
+    background-color: $pastel-blue;
+  }
 }
 
 .slider-buttons {
