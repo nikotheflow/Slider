@@ -90,15 +90,9 @@ function countSlides() {
 
 function correctPosition() {
   if (delPosition < - slideWidth / 3) {
-<<<<<<< HEAD
     position -= (slideWidth + slideDist) * -(Math.trunc(delPosition / slideWidth));
   } else if (delPosition > slideWidth / 3) {
     position += (slideWidth + slideDist) * (Math.trunc(delPosition / slideWidth));
-=======
-    position -= (slideWidth + slideDist);// * -(Math.trunc(delPosition / slideWidth));
-  } else if (delPosition > slideWidth / 3) {
-    position += (slideWidth + slideDist);// * (Math.trunc(delPosition / slideWidth));
->>>>>>> 579543b56de8b7492c7d2a7a666260e781a505e9
   }
   
   if (position > 0) {
@@ -115,12 +109,8 @@ function mouseDownSwipe() {
   sliderContainer.addEventListener('mouseup', mouseUpSwipe);
 }
 
-<<<<<<< HEAD
 function mouseMoveSwipe() {
   event.preventDefault();   
-=======
-function mouseMoveSwipe() {   
->>>>>>> 579543b56de8b7492c7d2a7a666260e781a505e9
   positionCurrent = event.clientX;
   delPosition = positionCurrent - positionStart;
 
