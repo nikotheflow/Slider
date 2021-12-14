@@ -40,7 +40,7 @@ $button-text-disabled-color: #d2d5db;
   width: var(--slider-width);
   display: flex;
   overflow-x: hidden;
-  margin: 10px;
+  margin: 20px 10px;
 }
 
 .slider-track {
@@ -115,21 +115,13 @@ $button-text-disabled-color: #d2d5db;
 
 .btn-side {
   background-color: transparent;
-}
 
-.arrow {
-  &_left {
-    transform: scaleX(-1);
+  &[disabled] path {
+    stroke: $button-text-disabled-color;
   }
 }
 
-.side-arrow {
-  height: 80px;
-  width: 50px;
-
-  &_left {
-    transform: scaleX(-1);
-  }
+.side-arrow path {
+  stroke: $button-color;
 }
-
 // === / BUTTONS ===
