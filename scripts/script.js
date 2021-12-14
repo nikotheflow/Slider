@@ -1,8 +1,9 @@
 // === VARIABLES ===
 
-let position = 0;
-const slidesToScroll = 3;
+const slidesToScroll = 2;
 const slidesToShow = 3;
+const slideWidth = 100;
+const slideDist = 10;
 
 const wrapper = document.querySelector('.wrapper');
 const sliderItems = document.querySelectorAll('.slider-item');
@@ -11,22 +12,21 @@ const sliderContainer = document.querySelector('.slider-container');
 const btnNext = document.querySelector('.btn-next');
 const btnPrev = document.querySelector('.btn-prev');
 
+const root = document.documentElement;
 const sliderItemsCount = sliderItems.length;
 
+let position = 0;
+let delPosition = 0;
+let positionStart = 0;
 let slidesHided = 0;
 let slidesLeft = sliderItemsCount - slidesToShow;
-let slideWidth = window.getComputedStyle(sliderItems[0]).width.match(/\d*/)[0];
-let slideDistance = Number(window.getComputedStyle(sliderItems[0]).marginRight.match(/\d*/)[0]);
-
-let positionStart = 'unclick';
-let delPosition = 0;
 
 // === / VARIABLES ===
 
 
 // === COMMONS ===
 
-setParameters(340);
+setParameters();
 
 // === / COMMONS ===
 
@@ -35,9 +35,9 @@ setParameters(340);
 
 btnNext.addEventListener('click', () => {
   if (slidesLeft < slidesToScroll) {
-    position = -Math.abs((sliderItemsCount - slidesToShow) * slideWidth + (sliderItemsCount - slidesToShow) * slideDistance);
+    position = -Math.abs((sliderItemsCount - slidesToShow) * (slideWidth + slideDist));
   } else {
-    position -= Math.abs(slidesToScroll * (Number(slideWidth) + Number(slideDistance)));
+    position -= Math.abs(slidesToScroll * (slideWidth + slideDist));
   }
     
   moveSlides();
@@ -48,7 +48,7 @@ btnPrev.addEventListener('click', () => {
   if (slidesHided < slidesToScroll) {
     position = 0;
   } else {
-    position += Math.abs(slidesToScroll * (Number(slideWidth) + Number(slideDistance)));
+    position += Math.abs(slidesToScroll * (slideWidth + slideDist));
   }
     
   moveSlides();
@@ -61,19 +61,16 @@ btnPrev.addEventListener('click', () => {
 // === SWIPE ===
 
 sliderContainer.addEventListener('touchstart', touchStartSwipe);
-sliderContainer.addEventListener('touchmove', touchMoveSwipe);
-sliderContainer.addEventListener('touchend', mouseUpSwipe);
-
 sliderContainer.addEventListener('mousedown', mouseDownSwipe);
-sliderContainer.addEventListener('mousemove', mouseMoveSwipe);
-sliderContainer.addEventListener('mouseup', mouseUpSwipe);
 
 // === / SWIPE ===
 
 
 // === FUNCTIONS ===
-function setParameters(wrapperWidth, slideWidth) {  
-  console.log(wrapper.style.width = `${wrapperWidth}px`);
+function setParameters() {
+  root.style.setProperty('--slider-width', `${slideWidth * slidesToShow + slideDist * (slidesToShow - 1)}px`);
+  root.style.setProperty('--slide-width', `${slideWidth}px`);
+  root.style.setProperty('--slide-dist', `${slideDist}px`);
 }
 
 function moveSlides() {
@@ -82,7 +79,7 @@ function moveSlides() {
 }
 
 function countSlides() {
-  slidesHided = Math.abs(position / (Number(slideWidth) + Number(slideDistance)));
+  slidesHided = Math.abs(position / (slideWidth + slideDist));
   slidesLeft = sliderItemsCount - slidesToShow - slidesHided;
   
   btnPrev.disabled = (slidesHided == 0 ? true : false);
@@ -91,57 +88,65 @@ function countSlides() {
   console.log('Слайдов осталось:', slidesLeft, 'Слайдов прошли:', slidesHided, 'Позиция:', position);
 }
 
-function mouseMoveSwipe() {
-  if (positionStart != 'unclick') {    
-    positionCurrent = event.clientX;
-    delPosition = positionCurrent - positionStart;
-
-    sliderTrack.style.transform = `translateX(${(position + delPosition)}px)`;
-  }  
-}
-
 function correctPosition() {
-  positionStart = 'unclick';  
-  position += delPosition;  
-
-  if (Math.abs(delPosition) <= slideWidth / 3) {
-    position = -slidesHided * (Number(slideWidth) + Number(slideDistance));
-  } else if (delPosition < - slideWidth / 3) {
-    position = (slidesHided + 1) * (-slideWidth - Number(slideDistance)) * slidesToScroll;
+  if (delPosition < - slideWidth / 3) {
+    position -= (slideWidth + slideDist);// * -(Math.trunc(delPosition / slideWidth));
   } else if (delPosition > slideWidth / 3) {
-    position = (slidesHided - 1) * (-slideWidth - Number(slideDistance)) ;
+    position += (slideWidth + slideDist);// * (Math.trunc(delPosition / slideWidth));
   }
-
+  
   if (position > 0) {
     position = 0;
-  } else if (position < -(sliderItemsCount - slidesToShow) * (Number(slideWidth) + Number(slideDistance))) {
-    position = -(sliderItemsCount - slidesToShow) * (Number(slideWidth) + Number(slideDistance));
+  } else if (position < -(sliderItemsCount - slidesToShow) * (slideWidth + slideDist)) {
+    position = -(sliderItemsCount - slidesToShow) * (slideWidth + slideDist);
   }
 }
 
 function mouseDownSwipe() {
   positionStart = event.clientX;
+
+  sliderContainer.addEventListener('mousemove', mouseMoveSwipe);
+  sliderContainer.addEventListener('mouseup', mouseUpSwipe);
+}
+
+function mouseMoveSwipe() {   
+  positionCurrent = event.clientX;
+  delPosition = positionCurrent - positionStart;
+
+  sliderTrack.style.transform = `translateX(${(position + delPosition)}px)`;
 }
 
 function mouseUpSwipe() {
   correctPosition();
   countSlides();  
   moveSlides();
+
+  sliderContainer.removeEventListener('mousemove', mouseMoveSwipe);
+  sliderContainer.removeEventListener('mouseup', mouseUpSwipe);
 }
 
 function touchStartSwipe() {
   event.preventDefault();
   positionStart = event.changedTouches[0].clientX;
 
+  sliderContainer.addEventListener('touchmove', touchMoveSwipe);
+  sliderContainer.addEventListener('touchend', touchEndSwipe);  
 }
 
-function touchMoveSwipe() {
-  if (positionStart != 'unclick') {    
-    positionCurrent = event.changedTouches[0].clientX;
-    delPosition = positionCurrent - positionStart;
+function touchMoveSwipe() {  
+  positionCurrent = event.changedTouches[0].clientX;
+  delPosition = positionCurrent - positionStart;
 
-    sliderTrack.style.transform = `translateX(${(position + delPosition)}px)`;
-  }
+  sliderTrack.style.transform = `translateX(${(position + delPosition)}px)`;
+}
+
+function touchEndSwipe() {
+  correctPosition();
+  countSlides();  
+  moveSlides();
+
+  sliderContainer.removeEventListener('touchmove', touchMoveSwipe);
+  sliderContainer.removeEventListener('touchend', touchEndSwipe);  
 }
 
 // === / FUNCTIONS ===
