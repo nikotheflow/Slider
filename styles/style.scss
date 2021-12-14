@@ -1,4 +1,5 @@
 // === VARIABLES ===
+
 :root {
   --slider-width: 340px;
   --slide-width: 100px;
@@ -9,6 +10,13 @@ $pastel-red: #fb6962;
 $pastel-green: #79de79;
 $pastel-blue: #a8e4ef;
 $pastel-yellow: #fcfc99;
+
+$button-color: #4676d7;
+$button-hover-color: #1d49aa;
+$button-focus-color: #cbd6ee;
+$button-disabled-color: #6c7589;
+$button-text-disabled-color: #d2d5db;
+
 // === / VARIABLES ===
 
 // === COMMONS ===
@@ -18,15 +26,21 @@ $pastel-yellow: #fcfc99;
   box-sizing: border-box;
 }
 
-.wrapper {
-  width: var(--slider-width);
-  margin: 0 auto;
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 // === / COMMONS ===
 
 // === SLIDER ===
+
 .slider-container {
+  width: var(--slider-width);
+  display: flex;
   overflow-x: hidden;
+  margin: 10px;
 }
 
 .slider-track {
@@ -56,16 +70,66 @@ $pastel-yellow: #fcfc99;
   }
 }
 
-.slider-buttons {
-  padding: 10px 0;
-  text-align: center;
+// === / SLIDER ===
+
+// === BUTTONS ===
+
+.slider-main-btns {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn {
-  flex: 1 1 auto;
-  height: 30px;
+  appearance: none;
   border: none;
+  cursor: pointer;
 }
-// === / SLIDER ===
+
+.btn-main {
+  min-width: 180px;
+  padding: 0 20px;
+  margin: 0 5px;
+  border: 0;
+  border-radius: 5px;
+  background: $button-color;
+  color: white;
+  padding: 8px 16px;
+  font-size: 16px;
+
+  &:hover {
+    background: $button-hover-color;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px $button-focus-color;
+  }
+
+  &[disabled] {
+    color: $button-text-disabled-color;
+    background: $button-disabled-color;
+    cursor: default;
+  }
+}
+
+.btn-side {
+  background-color: transparent;
+}
+
+.arrow {
+  &_left {
+    transform: scaleX(-1);
+  }
+}
+
+.side-arrow {
+  height: 80px;
+  width: 50px;
+
+  &_left {
+    transform: scaleX(-1);
+  }
+}
+
+// === / BUTTONS ===

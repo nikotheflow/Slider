@@ -11,13 +11,25 @@
           box-sizing: border-box;
 }
 
-.wrapper {
-  width: var(--slider-width);
-  margin: 0 auto;
+.container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .slider-container {
+  width: var(--slider-width);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   overflow-x: hidden;
+  margin: 10px;
 }
 
 .slider-track {
@@ -50,21 +62,69 @@
   background-color: #a8e4ef;
 }
 
-.slider-buttons {
-  padding: 10px 0;
-  text-align: center;
+.slider-main-btns {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .btn {
-  -webkit-box-flex: 1;
-      -ms-flex: 1 1 auto;
-          flex: 1 1 auto;
-  height: 30px;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   border: none;
+  cursor: pointer;
+}
+
+.btn-main {
+  min-width: 180px;
+  padding: 0 20px;
+  margin: 0 5px;
+  border: 0;
+  border-radius: 5px;
+  background: #4676d7;
+  color: white;
+  padding: 8px 16px;
+  font-size: 16px;
+}
+
+.btn-main:hover {
+  background: #1d49aa;
+}
+
+.btn-main:focus {
+  outline: none;
+  -webkit-box-shadow: 0 0 0 4px #cbd6ee;
+          box-shadow: 0 0 0 4px #cbd6ee;
+}
+
+.btn-main[disabled] {
+  color: #d2d5db;
+  background: #6c7589;
+  cursor: default;
+}
+
+.btn-side {
+  background-color: transparent;
+}
+
+.arrow_left {
+  -webkit-transform: scaleX(-1);
+          transform: scaleX(-1);
+}
+
+.side-arrow {
+  height: 80px;
+  width: 50px;
+}
+
+.side-arrow_left {
+  -webkit-transform: scaleX(-1);
+          transform: scaleX(-1);
 }

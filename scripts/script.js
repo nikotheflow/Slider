@@ -2,15 +2,16 @@
 
 const slidesToScroll = 2;
 const slidesToShow = 3;
-const slideWidth = 100;
+const slideWidth = 300;
 const slideDist = 10;
 
-const wrapper = document.querySelector('.wrapper');
 const sliderItems = document.querySelectorAll('.slider-item');
 const sliderTrack = document.querySelector('.slider-track');
 const sliderContainer = document.querySelector('.slider-container');
-const btnNext = document.querySelector('.btn-next');
-const btnPrev = document.querySelector('.btn-prev');
+const btnMainNext = document.querySelector('.btn-main_next');
+const btnMainPrev = document.querySelector('.btn-main_prev');
+const btnSideNext = document.querySelector('.btn-side_next');
+const btnSidePrev = document.querySelector('.btn-side_prev');
 
 const root = document.documentElement;
 const sliderItemsCount = sliderItems.length;
@@ -33,27 +34,11 @@ setParameters();
 
 // === BUTTONS ===
 
-btnNext.addEventListener('click', () => {
-  if (slidesLeft < slidesToScroll) {
-    position = -Math.abs((sliderItemsCount - slidesToShow) * (slideWidth + slideDist));
-  } else {
-    position -= Math.abs(slidesToScroll * (slideWidth + slideDist));
-  }
-    
-  moveSlides();
-  countSlides();
-})
+btnMainNext.addEventListener('click', clickNextButton)
+btnMainPrev.addEventListener('click', clickPrevButton)
 
-btnPrev.addEventListener('click', () => {
-  if (slidesHided < slidesToScroll) {
-    position = 0;
-  } else {
-    position += Math.abs(slidesToScroll * (slideWidth + slideDist));
-  }
-    
-  moveSlides();
-  countSlides();
-})
+btnSideNext.addEventListener('click', clickNextButton)
+btnSidePrev.addEventListener('click', clickPrevButton)
 
 // === / BUTTONS ===
 
@@ -82,8 +67,21 @@ function countSlides() {
   slidesHided = Math.abs(position / (slideWidth + slideDist));
   slidesLeft = sliderItemsCount - slidesToShow - slidesHided;
   
-  btnPrev.disabled = (slidesHided == 0 ? true : false);
-  btnNext.disabled = (slidesLeft == 0 ? true : false);
+  /*
+  if (slidesHided == 0) {
+    btnMainPrev.disabled = true;
+    btnSidePrev.disabled = true;
+  } else {
+    btnMainPrev.disabled = false;
+    btnSidePrev.disabled = false;
+  }
+  */
+
+  btnMainPrev.disabled = (slidesHided == 0 ? true : false);
+  btnSidePrev.disabled = (slidesHided == 0 ? true : false);
+  
+  btnMainNext.disabled = (slidesLeft == 0 ? true : false);
+  btnSideNext.disabled = (slidesLeft == 0 ? true : false);
 
   console.log('Слайдов осталось:', slidesLeft, 'Слайдов прошли:', slidesHided, 'Позиция:', position);
 }
@@ -102,7 +100,30 @@ function correctPosition() {
   }
 }
 
+function clickNextButton() {
+  if (slidesLeft < slidesToScroll) {
+    position = -Math.abs((sliderItemsCount - slidesToShow) * (slideWidth + slideDist));
+  } else {
+    position -= Math.abs(slidesToScroll * (slideWidth + slideDist));
+  }
+    
+  moveSlides();
+  countSlides();
+}
+
+function clickPrevButton() {
+  if (slidesHided < slidesToScroll) {
+    position = 0;
+  } else {
+    position += Math.abs(slidesToScroll * (slideWidth + slideDist));
+  }
+    
+  moveSlides();
+  countSlides();
+}
+
 function mouseDownSwipe() {
+  event.preventDefault();
   positionStart = event.clientX;
 
   sliderContainer.addEventListener('mousemove', mouseMoveSwipe);

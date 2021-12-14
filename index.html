@@ -10,7 +10,11 @@
 </head>
 
 <body>
-  <div class="wrapper">
+  <div class="container">
+    <button disabled class="btn btn-side btn-side_prev">
+      <img class="side-arrow side-arrow_left" src="images/side-arrow.svg" alt="side-arrow-left">
+    </button>
+
     <div class="slider-container">
       <div class="slider-track">
         <div class="slider-item"></div>
@@ -26,10 +30,16 @@
         <div class="slider-item"></div>
       </div>
     </div>
-    <div class="slider-buttons">
-      <button disabled class="btn btn-prev">Prev</button>
-      <button class="btn btn-next">Next</button>
-    </div>
+
+    <button class="btn btn-side btn-side_next">
+      <img class="side-arrow side-arrow_right" src="images/side-arrow.svg" alt="side-arrow-right">
+    </button>
+  </div>
+
+  <div class="slider-main-btns">
+    <button disabled class="btn btn-main btn-main_prev">Предыдущий</button>
+
+    <button class="btn btn-main btn-main_next">Следующий</button>
   </div>
 
   <script src="scripts/script.js"></script>
