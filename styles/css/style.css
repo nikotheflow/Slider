@@ -24,8 +24,8 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-transition: 0.2s;
-  transition: 0.2s;
+  -webkit-transition: 0.2s ease;
+  transition: 0.2s ease;
 }
 
 .slider-item {
