@@ -1,3 +1,9 @@
+:root {
+  --slider-width: 340px;
+  --slide-width: 100px;
+  --slide-dist: 10px;
+}
+
 *,
 ::before,
 ::after {
@@ -6,7 +12,7 @@
 }
 
 .wrapper {
-  width: 340px;
+  width: var(--slider-width);
   margin: 0 auto;
 }
 
@@ -23,13 +29,13 @@
 }
 
 .slider-item {
-  min-width: 100px;
-  height: 400px;
+  min-width: var(--slide-width);
+  height: 200px;
   border-radius: 10px;
 }
 
 .slider-item:not(:last-child) {
-  margin-right: 20px;
+  margin-right: var(--slide-dist);
 }
 
 .slider-item:nth-child(3n + 1) {
