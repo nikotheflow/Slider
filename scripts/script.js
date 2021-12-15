@@ -1,10 +1,5 @@
 // === VARIABLES ===
 
-const slidesToScroll = 2;
-const slidesToShow = 3;
-const slideWidth = 300;
-const slideDist = 10;
-
 const sliderItems = document.querySelectorAll('.slider-item');
 const sliderTrack = document.querySelector('.slider-track');
 const sliderContainer = document.querySelector('.slider-container');
@@ -13,9 +8,13 @@ const btnMainPrev = document.querySelector('.btn-main_prev');
 const btnSideNext = document.querySelector('.btn-side_next');
 const btnSidePrev = document.querySelector('.btn-side_prev');
 
-const root = document.documentElement;
+let slideWidth = +window.getComputedStyle(sliderItems[0]).minWidth.match(/\d*/)[0];
+let slideDist = +window.getComputedStyle(sliderItems[0]).marginRight.match(/\d*/)[0];
+let sliderWidth = +window.getComputedStyle(sliderContainer).width.match(/\d*/)[0];
 const sliderItemsCount = sliderItems.length;
 
+let slidesToScroll = 3;
+let slidesToShow = 3;
 let position = 0;
 let delPosition = 0;
 let positionStart = 0;
@@ -27,7 +26,23 @@ let slidesLeft = sliderItemsCount - slidesToShow;
 
 // === COMMONS ===
 
-setParameters();
+window.addEventListener('resize', () => {
+  position = 0;
+  moveSlides();
+  countSlides();
+
+  getParameters();
+
+  if (window.innerWidth <= 640) {
+    slidesToScroll = 1;
+    slidesToShow = 1;
+  } else {
+    slidesToScroll = 3;
+    slidesToShow = 3;
+  }
+});
+
+
 
 // === / COMMONS ===
 
@@ -52,10 +67,11 @@ sliderContainer.addEventListener('mousedown', mouseDownSwipe);
 
 
 // === FUNCTIONS ===
-function setParameters() {
-  root.style.setProperty('--slider-width', `${slideWidth * slidesToShow + slideDist * (slidesToShow - 1)}px`);
-  root.style.setProperty('--slide-width', `${slideWidth}px`);
-  root.style.setProperty('--slide-dist', `${slideDist}px`);
+
+function getParameters() {
+  slideWidth = +window.getComputedStyle(sliderItems[0]).minWidth.match(/\d*/)[0];
+  slideDist = +window.getComputedStyle(sliderItems[0]).marginRight.match(/\d*/)[0];
+  sliderWidth = +window.getComputedStyle(sliderContainer).width.match(/\d*/)[0];
 }
 
 function moveSlides() {
@@ -67,16 +83,6 @@ function countSlides() {
   slidesHided = Math.abs(position / (slideWidth + slideDist));
   slidesLeft = sliderItemsCount - slidesToShow - slidesHided;
   
-  /*
-  if (slidesHided == 0) {
-    btnMainPrev.disabled = true;
-    btnSidePrev.disabled = true;
-  } else {
-    btnMainPrev.disabled = false;
-    btnSidePrev.disabled = false;
-  }
-  */
-
   btnMainPrev.disabled = (slidesHided == 0 ? true : false);
   btnSidePrev.disabled = (slidesHided == 0 ? true : false);
   
@@ -88,9 +94,9 @@ function countSlides() {
 
 function correctPosition() {
   if (delPosition < - slideWidth / 3) {
-    position -= (slideWidth + slideDist) * -(Math.trunc(delPosition / slideWidth));
+    position -= (slideWidth + slideDist) * -(Math.trunc(3 * delPosition / slideWidth));
   } else if (delPosition > slideWidth / 3) {
-    position += (slideWidth + slideDist) * (Math.trunc(delPosition / slideWidth));
+    position += (slideWidth + slideDist) * (Math.trunc(3 * delPosition / slideWidth));
   }
   
   if (position > 0) {
@@ -126,8 +132,8 @@ function mouseDownSwipe() {
   event.preventDefault();
   positionStart = event.clientX;
 
-  sliderContainer.addEventListener('mousemove', mouseMoveSwipe);
-  sliderContainer.addEventListener('mouseup', mouseUpSwipe);
+  document.addEventListener('mousemove', mouseMoveSwipe);
+  document .addEventListener('mouseup', mouseUpSwipe);
 }
 
 function mouseMoveSwipe() {
@@ -143,16 +149,16 @@ function mouseUpSwipe() {
   countSlides();  
   moveSlides();
 
-  sliderContainer.removeEventListener('mousemove', mouseMoveSwipe);
-  sliderContainer.removeEventListener('mouseup', mouseUpSwipe);
+  document.removeEventListener('mousemove', mouseMoveSwipe);
+  document.removeEventListener('mouseup', mouseUpSwipe);
 }
 
 function touchStartSwipe() {
   event.preventDefault();
   positionStart = event.changedTouches[0].clientX;
 
-  sliderContainer.addEventListener('touchmove', touchMoveSwipe);
-  sliderContainer.addEventListener('touchend', touchEndSwipe);  
+  document.addEventListener('touchmove', touchMoveSwipe);
+  document.addEventListener('touchend', touchEndSwipe);  
 }
 
 function touchMoveSwipe() {  
@@ -167,8 +173,8 @@ function touchEndSwipe() {
   countSlides();  
   moveSlides();
 
-  sliderContainer.removeEventListener('touchmove', touchMoveSwipe);
-  sliderContainer.removeEventListener('touchend', touchEndSwipe);  
+  document.removeEventListener('touchmove', touchMoveSwipe);
+  document.removeEventListener('touchend', touchEndSwipe);  
 }
 
 // === / FUNCTIONS ===
