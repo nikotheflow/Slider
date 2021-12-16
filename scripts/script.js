@@ -1,5 +1,6 @@
 // === VARIABLES ===
 
+const container = document.querySelector('.container');
 const sliderItems = document.querySelectorAll('.slider-item');
 const sliderTrack = document.querySelector('.slider-track');
 const sliderContainer = document.querySelector('.slider-container');
@@ -8,10 +9,11 @@ const btnMainPrev = document.querySelector('.btn-main_prev');
 const btnSideNext = document.querySelector('.btn-side_next');
 const btnSidePrev = document.querySelector('.btn-side_prev');
 
+const sliderItemsCount = sliderItems.length;
+
 let slideWidth = +window.getComputedStyle(sliderItems[0]).minWidth.match(/\d*/)[0];
 let slideDist = +window.getComputedStyle(sliderItems[0]).marginRight.match(/\d*/)[0];
 let sliderWidth = +window.getComputedStyle(sliderContainer).width.match(/\d*/)[0];
-const sliderItemsCount = sliderItems.length;
 
 let slidesToScroll = 3;
 let slidesToShow = 3;
@@ -26,23 +28,18 @@ let slidesLeft = sliderItemsCount - slidesToShow;
 
 // === COMMONS ===
 
-window.addEventListener('resize', () => {
-  position = 0;
-  moveSlides();
-  countSlides();
+setParameters();
+getParameters();
 
+window.addEventListener('resize', () => {
+  setParameters();
   getParameters();
 
-  if (window.innerWidth <= 640) {
-    slidesToScroll = 1;
-    slidesToShow = 1;
-  } else {
-    slidesToScroll = 3;
-    slidesToShow = 3;
-  }
+  position = 0;
+  moveSlides();
+  
+  countSlides();
 });
-
-
 
 // === / COMMONS ===
 
@@ -54,19 +51,31 @@ btnMainPrev.addEventListener('click', clickPrevButton)
 
 btnSideNext.addEventListener('click', clickNextButton)
 btnSidePrev.addEventListener('click', clickPrevButton)
+btnSideNext.addEventListener('touchstart', clickNextButton)
+btnSidePrev.addEventListener('touchstart', clickPrevButton)
 
 // === / BUTTONS ===
 
 
 // === SWIPE ===
 
-sliderContainer.addEventListener('touchstart', touchStartSwipe);
-sliderContainer.addEventListener('mousedown', mouseDownSwipe);
+container.addEventListener('touchstart', touchStartSwipe);
+container.addEventListener('mousedown', mouseDownSwipe);
 
 // === / SWIPE ===
 
 
 // === FUNCTIONS ===
+
+function setParameters() {
+  if (window.innerWidth <= 480) {
+    slidesToScroll = 1;
+    slidesToShow = 1;
+  } else {
+    slidesToScroll = 3;
+    slidesToShow = 3;
+  }
+}
 
 function getParameters() {
   slideWidth = +window.getComputedStyle(sliderItems[0]).minWidth.match(/\d*/)[0];
@@ -94,9 +103,9 @@ function countSlides() {
 
 function correctPosition() {
   if (delPosition < - slideWidth / 3) {
-    position -= (slideWidth + slideDist) * -(Math.trunc(3 * delPosition / slideWidth));
+    position -= (slideWidth + slideDist) * -(Math.trunc(1.2 * delPosition / slideWidth));
   } else if (delPosition > slideWidth / 3) {
-    position += (slideWidth + slideDist) * (Math.trunc(3 * delPosition / slideWidth));
+    position += (slideWidth + slideDist) * (Math.trunc(1.2 * delPosition / slideWidth));
   }
   
   if (position > 0) {
@@ -129,6 +138,7 @@ function clickPrevButton() {
 }
 
 function mouseDownSwipe() {
+  console.log('але')
   event.preventDefault();
   positionStart = event.clientX;
 
