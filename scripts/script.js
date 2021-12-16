@@ -17,6 +17,7 @@ let sliderWidth = +window.getComputedStyle(sliderContainer).width.match(/\d*/)[0
 
 let slidesToScroll = 3;
 let slidesToShow = 3;
+let scrollCoef = 1.5;
 let position = 0;
 let delPosition = 0;
 let positionStart = 0;
@@ -71,9 +72,11 @@ function setParameters() {
   if (window.innerWidth <= 480) {
     slidesToScroll = 1;
     slidesToShow = 1;
+    scrollCoef = 2.5;
   } else {
     slidesToScroll = 3;
     slidesToShow = 3;
+    scrollCoef = 1.5;
   }
 }
 
@@ -103,9 +106,9 @@ function countSlides() {
 
 function correctPosition() {
   if (delPosition < - slideWidth / 3) {
-    position -= (slideWidth + slideDist) * -(Math.trunc(1.2 * delPosition / slideWidth));
+    position -= (slideWidth + slideDist) * -(Math.trunc(scrollCoef * delPosition / slideWidth));
   } else if (delPosition > slideWidth / 3) {
-    position += (slideWidth + slideDist) * (Math.trunc(1.2 * delPosition / slideWidth));
+    position += (slideWidth + slideDist) * (Math.trunc(scrollCoef * delPosition / slideWidth));
   }
   
   if (position > 0) {
