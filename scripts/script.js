@@ -103,7 +103,7 @@ container.addEventListener('mousedown', mouseDownSwipe);
 
 function setVersion() {
   if (version == null) {
-    version = Math.round(Math.random() + 2);
+    version = Math.floor(Math.random() * 3) + 1;
     localStorage.setItem('version', version);
   }
 
