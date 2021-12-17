@@ -1,13 +1,17 @@
 // === VARIABLES ===
 
 const container = document.querySelector('.container');
+const task = document.querySelector('.task');
 const sliderItems = document.querySelectorAll('.slider-item');
 const sliderTrack = document.querySelector('.slider-track');
 const sliderContainer = document.querySelector('.slider-container');
+const btnsMain = document.querySelector('.slider-main-btns');
 const btnMainNext = document.querySelector('.btn-main_next');
 const btnMainPrev = document.querySelector('.btn-main_prev');
+const btnsSide = document.querySelector('.slider-side-btns');
 const btnSideNext = document.querySelector('.btn-side_next');
 const btnSidePrev = document.querySelector('.btn-side_prev');
+const btnSlide = document.querySelector('.btn-slider-link');
 
 const sliderItemsCount = sliderItems.length;
 
@@ -17,18 +21,32 @@ let sliderWidth = +window.getComputedStyle(sliderContainer).width.match(/\d*/)[0
 
 let slidesToScroll = 3;
 let slidesToShow = 3;
-let scrollCoef = 1.5;
+let scrollCoef = 1.3;
 let position = 0;
 let delPosition = 0;
 let positionStart = 0;
 let slidesHided = 0;
 let slidesLeft = sliderItemsCount - slidesToShow;
 
+let isClick = false;
+let isTouch = false;
+
+let startTime = new Date();
+let version = localStorage.getItem('version');
+let stats = {
+  first: null,
+  last: null,
+  main: 0,
+  side: 0,
+  swipe: 0,
+};
+
 // === / VARIABLES ===
 
 
 // === COMMONS ===
 
+setVersion();
 setParameters();
 getParameters();
 
@@ -37,8 +55,8 @@ window.addEventListener('resize', () => {
   getParameters();
 
   position = 0;
-  moveSlides();
-  
+
+  moveSlides();  
   countSlides();
 });
 
@@ -55,6 +73,21 @@ btnSidePrev.addEventListener('click', clickPrevButton)
 btnSideNext.addEventListener('touchstart', clickNextButton)
 btnSidePrev.addEventListener('touchstart', clickPrevButton)
 
+btnSlide.addEventListener('mousedown', () => {  
+  positionStart = event.clientX;
+
+  document.addEventListener('mousemove', slideClickMove(event));
+  document.addEventListener('mouseup', slideClickEnd);
+})
+
+btnSlide.addEventListener('touchstart', () => {
+  event.preventDefault();
+  positionStart = event.changedTouches[0].clientX;
+
+  document.addEventListener('touchmove', slideClickMove(event.changedTouches[0]));
+  document.addEventListener('touchend', slideClickEnd);
+})
+
 // === / BUTTONS ===
 
 
@@ -68,6 +101,25 @@ container.addEventListener('mousedown', mouseDownSwipe);
 
 // === FUNCTIONS ===
 
+function setVersion() {
+  if (version == null) {
+    version = Math.round(Math.random() + 2);
+    localStorage.setItem('version', version);
+  }
+
+  if (version == 1) {
+    console.log('1')
+    btnsMain.style.display = 'flex';
+  } else if (version == 2) {
+    console.log('2')
+    btnsSide.style.display = 'flex';
+  } else if (version == 3) {
+    console.log('3')
+    btnsMain.style.display = 'flex';
+    btnsSide.style.display = 'flex';
+  }
+}
+
 function setParameters() {
   if (window.innerWidth <= 480) {
     slidesToScroll = 1;
@@ -76,7 +128,7 @@ function setParameters() {
   } else {
     slidesToScroll = 3;
     slidesToShow = 3;
-    scrollCoef = 1.5;
+    scrollCoef = 1.3;
   }
 }
 
@@ -101,14 +153,16 @@ function countSlides() {
   btnMainNext.disabled = (slidesLeft == 0 ? true : false);
   btnSideNext.disabled = (slidesLeft == 0 ? true : false);
 
-  console.log('Слайдов осталось:', slidesLeft, 'Слайдов прошли:', slidesHided, 'Позиция:', position);
+  //console.log('Слайдов осталось:', slidesLeft, 'Слайдов прошли:', slidesHided, 'Позиция:', position);
 }
 
 function correctPosition() {
   if (delPosition < - slideWidth / 3) {
     position -= (slideWidth + slideDist) * -(Math.trunc(scrollCoef * delPosition / slideWidth));
+    addStat('swipe');
   } else if (delPosition > slideWidth / 3) {
     position += (slideWidth + slideDist) * (Math.trunc(scrollCoef * delPosition / slideWidth));
+    addStat('swipe');
   }
   
   if (position > 0) {
@@ -118,15 +172,17 @@ function correctPosition() {
   }
 }
 
-function clickNextButton() {
+function clickNextButton() {  
   if (slidesLeft < slidesToScroll) {
     position = -Math.abs((sliderItemsCount - slidesToShow) * (slideWidth + slideDist));
   } else {
     position -= Math.abs(slidesToScroll * (slideWidth + slideDist));
   }
-    
+  
   moveSlides();
   countSlides();
+
+  addStat(this.name);
 }
 
 function clickPrevButton() {
@@ -138,15 +194,19 @@ function clickPrevButton() {
     
   moveSlides();
   countSlides();
+
+  addStat(this.name);
 }
 
 function mouseDownSwipe() {
-  console.log('але')
+  isTouch = false;
+  isClick = true;
+
   event.preventDefault();
-  positionStart = event.clientX;
+  positionStart = event.clientX; 
 
   document.addEventListener('mousemove', mouseMoveSwipe);
-  document .addEventListener('mouseup', mouseUpSwipe);
+  document.addEventListener('mouseup', mouseUpSwipe);
 }
 
 function mouseMoveSwipe() {
@@ -163,10 +223,13 @@ function mouseUpSwipe() {
   moveSlides();
 
   document.removeEventListener('mousemove', mouseMoveSwipe);
-  document.removeEventListener('mouseup', mouseUpSwipe);
+  document.removeEventListener('mouseup', mouseUpSwipe);  
 }
 
 function touchStartSwipe() {
+  isTouch = true;
+  isClick = false;
+
   event.preventDefault();
   positionStart = event.changedTouches[0].clientX;
 
@@ -174,7 +237,7 @@ function touchStartSwipe() {
   document.addEventListener('touchend', touchEndSwipe);  
 }
 
-function touchMoveSwipe() {  
+function touchMoveSwipe() {
   positionCurrent = event.changedTouches[0].clientX;
   delPosition = positionCurrent - positionStart;
 
@@ -187,7 +250,43 @@ function touchEndSwipe() {
   moveSlides();
 
   document.removeEventListener('touchmove', touchMoveSwipe);
-  document.removeEventListener('touchend', touchEndSwipe);  
+  document.removeEventListener('touchend', touchEndSwipe);
+}
+
+function slideClickMove(ev) {
+  positionCurrent = ev.clientX;
+  delPosition = positionCurrent - positionStart;
+}
+
+function slideClickEnd() {
+  if (!delPosition) {
+    send();
+    task.innerHTML = 'Спасибо!';
+    container.style.display = 'none';
+    btnsMain.style.display = 'none';
+  }
+  
+  if (isTouch) {
+    document.removeEventListener('touchmove', slideClickMove(event.changedTouches[0]));
+    document.removeEventListener('touchend', slideClickEnd);
+  } else {
+    document.removeEventListener('mousemove', slideClickMove(event));
+    document.removeEventListener('mouseup', slideClickEnd);
+  }  
+}
+
+function addStat(action) {
+  if (stats.first == null) {
+    stats.first = action;
+  }
+
+  stats.last = action;
+  stats[action] += 1;
+}
+
+function send(goal) {
+  let newTime = new Date ();
+  console.log(stats);
 }
 
 // === / FUNCTIONS ===

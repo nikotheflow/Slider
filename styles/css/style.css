@@ -17,6 +17,7 @@ body {
 }
 
 .container {
+  position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -26,6 +27,7 @@ body {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  z-index: 0;
 }
 
 .slider-container {
@@ -67,10 +69,13 @@ body {
   background-color: #79de79;
 }
 
+.btn-slider-link {
+  width: 100%;
+  height: 100%;
+}
+
 .slider-main-btns {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: none;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -87,6 +92,7 @@ body {
      -moz-appearance: none;
           appearance: none;
   border: none;
+  background: transparent;
   cursor: pointer;
 }
 
@@ -120,18 +126,16 @@ body {
 
 .slider-side-btns {
   position: absolute;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: none;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
   min-width: 1220px;
+  z-index: -1;
 }
 
 .btn-side {
   padding: 30px;
-  z-index: 2;
   background-color: transparent;
   -webkit-transform: scale(0.6);
           transform: scale(0.6);
@@ -241,6 +245,7 @@ body {
     height: 400px;
   }
   .slider-main-btns {
+    display: none;
     margin: 0 auto;
     max-width: 300px;
     -webkit-box-pack: justify;
@@ -255,6 +260,7 @@ body {
   .slider-side-btns {
     top: 30%;
     min-width: 350px;
+    z-index: 0;
   }
   .btn-side {
     position: absolute;
