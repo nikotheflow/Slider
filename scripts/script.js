@@ -31,7 +31,6 @@ let slidesLeft = sliderItemsCount - slidesToShow;
 let isClick = false;
 let isTouch = false;
 
-let startTime = new Date();
 let version = localStorage.getItem('version');
 let stats = {
   first: null,
@@ -63,8 +62,9 @@ window.addEventListener('resize', () => {
 // === / COMMONS ===
 
 
-// === BUTTONS ===
+// === HANDLERS ===
 
+//buttons
 btnMainNext.addEventListener('click', clickNextButton)
 btnMainPrev.addEventListener('click', clickPrevButton)
 
@@ -73,6 +73,7 @@ btnSidePrev.addEventListener('click', clickPrevButton)
 btnSideNext.addEventListener('touchstart', clickNextButton)
 btnSidePrev.addEventListener('touchstart', clickPrevButton)
 
+//swipe
 btnSlide.addEventListener('mousedown', () => {  
   positionStart = event.clientX;
 
@@ -88,19 +89,16 @@ btnSlide.addEventListener('touchstart', () => {
   document.addEventListener('touchend', slideClickEnd);
 })
 
-// === / BUTTONS ===
-
-
-// === SWIPE ===
-
+//swipe on goal item
 container.addEventListener('touchstart', touchStartSwipe);
 container.addEventListener('mousedown', mouseDownSwipe);
 
-// === / SWIPE ===
+// === / HANDLERS ===
 
 
 // === FUNCTIONS ===
 
+//three versions of slider: 1.main buttons only, 2.side buttons only, 3.main and side buttons
 function setVersion() {
   if (version == null) {
     version = Math.floor(Math.random() * 3) + 1;
@@ -108,13 +106,10 @@ function setVersion() {
   }
 
   if (version == 1) {
-    console.log('1')
     btnsMain.style.display = 'flex';
   } else if (version == 2) {
-    console.log('2')
     btnsSide.style.display = 'flex';
   } else if (version == 3) {
-    console.log('3')
     btnsMain.style.display = 'flex';
     btnsSide.style.display = 'flex';
   }
@@ -261,6 +256,7 @@ function slideClickMove(ev) {
 function slideClickEnd() {
   if (!delPosition) {
     send();
+
     task.innerHTML = 'Спасибо!';
     container.style.display = 'none';
     btnsMain.style.display = 'none';
@@ -284,9 +280,36 @@ function addStat(action) {
   stats[action] += 1;
 }
 
-function send(goal) {
-  let newTime = new Date ();
-  console.log(stats);
+//yandex metrika and google analytics goals
+function addGoal(action) {
+  ym(86929511, 'reachGoal', action);
+  gtag('event', action);
+}
+
+function send() {
+  //send to csv
+  let xhr = new XMLHttpRequest();
+  let post = new FormData();
+  
+  xhr.open('POST', 'https://21nikitenko.lavro.ru/save_goal.php');
+  
+  post.append('version', version);
+  post.append('first', stats.first);
+  post.append('last', stats.last);
+  post.append('main', stats.main);
+  post.append('side', stats.side);
+  post.append('swipe', stats.swipe);
+
+  xhr.send(post);
+  
+  // send to yandex metrika and google analytics
+  ['main', 'side', 'swipe'].forEach((action) => {
+    if (stats[action] != 0) {
+      addGoal(action);
+    }  
+  })
+
+  //console.log(stats);
 }
 
 // === / FUNCTIONS ===
